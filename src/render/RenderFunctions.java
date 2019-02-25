@@ -3,7 +3,12 @@ package render;
 import java.awt.image.BufferedImage;
 
 public class RenderFunctions {
-    static void drawLine(int x1, int y1, int x2, int y2, int rgb, BufferedImage img) {
+
+    static final int X = 0;
+    static final int Y = 1;
+    static final int Z = 2;
+
+    static void drawLineUnsafe(int x1, int y1, int x2, int y2, int rgb, BufferedImage img) {
         int dx = Math.abs(x2 - x1);
         int dy = Math.abs(y2 - y1);
         if (dx >= dy) {

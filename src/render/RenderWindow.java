@@ -34,7 +34,7 @@ public class RenderWindow extends JFrame {
                 long fps = tSum / lastFramesLength.length != 0 ? (long) (1000.0 / (tSum / (double) lastFramesLength.length)) : 0;
                 g.setColor(Color.RED);
                 g.drawString("FPS: " + fps + " frame:" + frameNum, 40, 40);
-                g.drawOval(300, 300, 400, 400);
+              //  g.drawOval(300, 300, 400, 400);
             }
             getBufferStrategy().show();
             g.dispose();
@@ -48,13 +48,14 @@ public class RenderWindow extends JFrame {
     }
 
 
-    //28
+    Render render = new Render();
+    {
+        render.addModel(Model.readFromObj("models/garg.obj"));
+    }
+
     void render(Graphics g) {
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        for (float a = 0; a <Math.PI * 2; a+= Math.PI / 3600 ) {
-            drawLine(500, 500, (int) (500 + 400 * Math.sin(a)), (int) (500 + 400 * Math.cos(a)), 0xFFFFFF, img);
-        }
-
+        render.render(img);
         g.drawImage(img, 0, 0, null);
     }
 
