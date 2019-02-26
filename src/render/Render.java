@@ -23,15 +23,16 @@ public class Render {
     void renderWireModel(Model m, int rgb, BufferedImage img) {
         int offsetX = 900;
         int offsetY = 800;
-        float scaleX = 5;
-        float scaleY = -5;
+        float scaleX = 1;
+        float scaleY = -1;
         for (int[] triangle : m.triangles) {
             float[] p0 = m.verts[triangle[0]];
             float[] p1 = m.verts[triangle[1]];
             float[] p2 = m.verts[triangle[2]];
-            drawLineUnsafe((int) (p0[X] * scaleX + offsetX), (int) (p0[Y] * scaleY + offsetY), (int) (p1[X] * scaleX + offsetX), (int) (p1[Y] * scaleY + offsetY), rgb, img);
-            drawLineUnsafe((int) (p0[X] * scaleX + offsetX), (int) (p0[Y] * scaleY + offsetY), (int) (p2[X] * scaleX + offsetX), (int) (p2[Y] * scaleY + offsetY), rgb, img);
-            drawLineUnsafe((int) (p1[X] * scaleX + offsetX), (int) (p1[Y] * scaleY + offsetY), (int) (p2[X] * scaleX + offsetX), (int) (p2[Y] * scaleY + offsetY), rgb, img);
+            drawTriangleWireUnsafe(
+                    (int) (p0[X] * scaleX + offsetX), (int) (p0[Y] * scaleY + offsetY),
+                    (int)(p1[X] * scaleX + offsetX), (int) (p1[Y] * scaleY + offsetY),
+                    (int) (p2[X] * scaleX + offsetX), (int) (p2[Y] * scaleY + offsetY), rgb, img);
         }
     }
 

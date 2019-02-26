@@ -8,6 +8,12 @@ public class RenderFunctions {
     static final int Y = 1;
     static final int Z = 2;
 
+    static void drawTriangleWireUnsafe(int x1, int y1, int x2, int y2, int x3, int y3, int rgb, BufferedImage img){
+        drawLineUnsafe(x1, y1, x2, y2, rgb, img);
+        drawLineUnsafe(x1, y1, x3, y3, rgb, img);
+        drawLineUnsafe(x2, y2, x3, y3, rgb, img);
+    }
+
     static void drawLineUnsafe(int x1, int y1, int x2, int y2, int rgb, BufferedImage img) {
         int dx = Math.abs(x2 - x1);
         int dy = Math.abs(y2 - y1);

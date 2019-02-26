@@ -50,7 +50,7 @@ public class RenderWindow extends JFrame {
 
     Render render = new Render();
     {
-        render.addModel(Model.readFromObj("models/garg.obj"));
+        render.addModel(Model.readFromObj("models/uaz.obj"));
     }
 
     void render(Graphics g) {
