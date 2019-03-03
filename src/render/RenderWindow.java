@@ -8,7 +8,7 @@ import static render.RenderFunctions.*;
 public class RenderWindow extends JFrame {
     static final int width = 1920;
     static final int height = 1080;
-
+    boolean showTestOverlay = false;
     RenderWindow() {
         setSize(width, height);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -50,13 +50,16 @@ public class RenderWindow extends JFrame {
 
     Render render = new Render();
     {
-        render.addModel(Model.readFromObj("models/uaz.obj"));
+        render.addModel(Model.readFromObj("models/garg.obj"));
     }
 
     void render(Graphics g) {
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         render.render(img);
         g.drawImage(img, 0, 0, null);
+        if(showTestOverlay){
+            TestOverlay.draw(g);
+        }
     }
 
 }

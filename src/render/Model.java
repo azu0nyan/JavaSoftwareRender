@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Model {
-    float[][] verts;
+    Vector3D[] verts;
     int [][] triangles;
 
-    public Model(float[][] verts, int[][] triangles) {
+    public Model(Vector3D[] verts, int[][] triangles) {
         this.verts = verts;
         this.triangles = triangles;
     }
@@ -18,7 +18,7 @@ public class Model {
         try {
             System.out.println("Loading:" + filename);
             Scanner f = new Scanner(new File(filename));
-            ArrayList<float[]> verts = new ArrayList<>();
+            ArrayList<Vector3D> verts = new ArrayList<>();
             ArrayList<int[]> triangles = new ArrayList<>();
             while (f.hasNextLine()) {
                 String str = f.nextLine();
@@ -28,7 +28,7 @@ public class Model {
                 if (first.startsWith("#")) continue;
                 switch (first) {
                     case "v":
-                        float[] vertex = {current.nextFloat(), current.nextFloat(), current.nextFloat()};
+                        Vector3D vertex = new Vector3D(current.nextFloat(), current.nextFloat(), current.nextFloat());
                         verts.add(vertex);
                         break;
                     case "vt"://uv
@@ -51,7 +51,7 @@ public class Model {
                 }
             }
             System.out.println("Loaded verts: "  + verts.size()  + ", tris: " + triangles.size());
-            return new Model(verts.toArray(new float[0][]), triangles.toArray(new int[0][]));
+            return new Model(verts.toArray(new Vector3D[0]), triangles.toArray(new int[0][]));
 
 
         } catch (FileNotFoundException e) {
