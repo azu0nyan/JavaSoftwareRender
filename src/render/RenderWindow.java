@@ -2,10 +2,12 @@ package render;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import static render.RenderFunctions.*;
 
-public class RenderWindow extends JFrame {
+public class RenderWindow extends JFrame implements KeyListener {
     static final int width = 1920;
     static final int height = 1080;
     boolean showTestOverlay = false;
@@ -13,6 +15,7 @@ public class RenderWindow extends JFrame {
         setSize(width, height);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setUndecorated(true);
+        addKeyListener(this);
     }
 
     boolean showFps = true;
@@ -50,7 +53,16 @@ public class RenderWindow extends JFrame {
 
     Render render = new Render();
     {
-        render.addModel(Model.readFromObj("models/garg.obj"));
+        render.addModel(Model.readFromObj(
+                "models/garg.obj",
+                "models/uaz_d.png",
+                "models/uaz_n.png",
+                "models/uaz_s.png"));
+      /*  render.addModel(Model.readFromObj(
+                "models/lamb.obj",
+                "models/lamb_d.jpeg",
+                null,
+                "models/lamb_s.jpeg"));*/
     }
 
     void render(Graphics g) {
@@ -62,4 +74,54 @@ public class RenderWindow extends JFrame {
         }
     }
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()){
+            case KeyEvent.VK_Z:
+                render.scale = render.scale.scale(1.1f);
+                break;
+            case KeyEvent.VK_X:
+                render.scale = render.scale.scale(0.9f);
+                break;
+            case KeyEvent.VK_R:
+                render.scale = render.scale.mull(new Vector3D(-1, 1, 1));
+                break;
+            case KeyEvent.VK_F:
+                render.scale = render.scale.mull(new Vector3D(1, -1, 1));
+                break;
+            case KeyEvent.VK_V:
+                render.scale = render.scale.mull(new Vector3D(1, 1, -1));
+                break;
+
+
+            case KeyEvent.VK_Q:
+                render.offset = render.offset.add(new Vector3D(0, 0, -50));
+                break;
+            case KeyEvent.VK_E:
+                render.offset = render.offset.add(new Vector3D(0, 0, 50));
+                break;
+            case KeyEvent.VK_W:
+                render.offset = render.offset.add(new Vector3D(0, 50, 0));
+                break;
+            case KeyEvent.VK_S:
+                render.offset = render.offset.add(new Vector3D(0, -50, 0));
+                break;
+            case KeyEvent.VK_A:
+                render.offset = render.offset.add(new Vector3D(50, 0, 0));
+                break;
+            case KeyEvent.VK_D:
+                render.offset = render.offset.add(new Vector3D(-50, 0, 0));
+                break;
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
 }

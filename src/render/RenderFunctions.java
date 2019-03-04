@@ -2,28 +2,110 @@ package render;
 
 import java.awt.image.BufferedImage;
 
+import static render.MathUtils.*;
+
 public class RenderFunctions {
 
-    static final int X = 0;
-    static final int Y = 1;
-    static final int Z = 2;
-    static void renderTriangle(Vector2D a, Vector2D b, Vector2D c, int rgb, BufferedImage img){
+    static void renderTriangleColor(Vector2D a, Vector2D b, Vector2D c, int rgb, BufferedImage img) {
         int minX = Math.max(0, Math.min(a.getXInt(), Math.min(b.getXInt(), c.getXInt())));
         int minY = Math.max(0, Math.min(a.getYInt(), Math.min(b.getYInt(), c.getYInt())));
         int maxX = Math.min(img.getWidth() - 1, Math.max(a.getXInt(), Math.max(b.getXInt(), c.getXInt())));
-        int maxY = Math.min(img.getHeight() - 1,Math.max(a.getYInt(), Math.max(b.getYInt(), c.getYInt())));
+        int maxY = Math.min(img.getHeight() - 1, Math.max(a.getYInt(), Math.max(b.getYInt(), c.getYInt())));
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
-                if(MathUtils.inTriangle(a,b,c, new Vector2D(x,y))){
+                if (MathUtils.inTriangle(a, b, c, new Vector2D(x, y))) {
                     img.setRGB(x, y, rgb);
                 }
             }
         }
-
-        
     }
-    
-    static void renderTriangleWireUnsafe(int x1, int y1, int x2, int y2, int x3, int y3, int rgb, BufferedImage img){
+
+    static final int colorModeGreyScale = 0;
+    static final int colorModeDiffuse = 1;
+
+    static final int lightingModeNoLighting = 0;
+    static final int lightingModeFlatShading = 1;
+    static final int lightingModeGouraud = 2;
+
+    static void renderTriangleOnModel(Model m, int id, int colorMode, int lightingMode, Render worldInfo) {
+        Vector3D a = m.verts[m.triangles[id][0]];
+        Vector3D b = m.verts[m.triangles[id][1]];
+        Vector3D c = m.verts[m.triangles[id][2]];
+
+        a = transform(a, worldInfo.offset, worldInfo.scale);
+        b = transform(b, worldInfo.offset, worldInfo.scale);
+        c = transform(c, worldInfo.offset, worldInfo.scale);
+
+        //backFace culling
+        Vector3D ab = b.sub(a);
+        Vector3D ac = b.sub(c);
+        Vector3D triangleNormal = Vector3D.crossProduct(ab, ac).normalize();
+        float scalarProduct = Vector3D.scalarProduct(triangleNormal, worldInfo.cameraDirection);
+        if (scalarProduct <= 0) return;
+
+
+        //project on screen
+        Vector2D a2 = a.removeZ();
+        Vector2D b2 = b.removeZ();
+        Vector2D c2 = c.removeZ();
+
+        //clamp probable triangle area
+        int minX = Math.max(0, Math.min(a2.getXInt(), Math.min(b2.getXInt(), c2.getXInt())));
+        int minY = Math.max(0, Math.min(a2.getYInt(), Math.min(b2.getYInt(), c2.getYInt())));
+        int maxX = Math.min(worldInfo.img.getWidth() - 1, Math.max(a2.getXInt(), Math.max(b2.getXInt(), c2.getXInt())));
+        int maxY = Math.min(worldInfo.img.getHeight() - 1, Math.max(a2.getYInt(), Math.max(b2.getYInt(), c2.getYInt())));
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                Vector2D p = new Vector2D(x, y);
+                Vector3D bar = toBarycentric(a2, b2, c2, p);
+                if (bar.x >= 0 && bar.y >= 0 && bar.z >= 0) {
+                    Vector3D placeIn3D = weighted(a, b, c, bar);
+                    if (placeIn3D.z < worldInfo.zBuffer[worldInfo.toZbIndex(x, y)]) {
+                        //get diffuse Color
+                        int rgb = worldInfo.defaultColor;
+                        switch (colorMode) {
+                            case colorModeGreyScale:
+                                rgb = 0xFFFFFF;
+                                break;
+                            case colorModeDiffuse:
+                                //texture cords
+                                Vector2D at = m.uvs[m.triangleUVs[id][0]];
+                                Vector2D bt = m.uvs[m.triangleUVs[id][1]];
+                                Vector2D ct = m.uvs[m.triangleUVs[id][2]];
+                                Vector2D uv = weighted(at, bt, ct, bar);
+                                rgb = m.getDiffuseAt(uv);
+                                break;
+                        }
+                        float lightIntecicity = 0;
+                        switch (lightingMode){
+                            case lightingModeFlatShading:
+                                lightIntecicity = Vector3D.scalarProduct(triangleNormal, worldInfo.lightDirection);
+                                break;
+                            case lightingModeNoLighting:
+                                lightIntecicity = 1f;
+                                break;
+                            case lightingModeGouraud:
+                                Vector3D an = m.normals[m.triangleNormals[id][0]].mull(worldInfo.scale);
+                                Vector3D bn = m.normals[m.triangleNormals[id][1]].mull(worldInfo.scale);
+                                Vector3D cn = m.normals[m.triangleNormals[id][2]].mull(worldInfo.scale);
+                                Vector3D pNormal = weighted(an, bn, cn, bar).normalize();
+                                lightIntecicity = Vector3D.scalarProduct(pNormal, worldInfo.lightDirection);
+                                //System.out.println(lightIntecicity);
+                                break;
+                        }
+                        rgb = lightColor(rgb, lightIntecicity);
+                        //write color
+                        worldInfo.img.setRGB(x, y, rgb);
+                        //write zBuffer
+                        worldInfo.zBuffer[worldInfo.toZbIndex(x, y)] = placeIn3D.z;
+                    }
+                }
+            }
+        }
+    }
+
+
+    static void renderTriangleWireUnsafe(int x1, int y1, int x2, int y2, int x3, int y3, int rgb, BufferedImage img) {
         renderLineUnsafe(x1, y1, x2, y2, rgb, img);
         renderLineUnsafe(x1, y1, x3, y3, rgb, img);
         renderLineUnsafe(x2, y2, x3, y3, rgb, img);
@@ -42,13 +124,13 @@ public class RenderFunctions {
                 y2 = ty;
             }
             int dirY = (int) Math.signum(y2 - y1);
-            int  error = 0;
+            int error = 0;
             int dError = dy;
             int y = y1;
             for (int x = x1; x <= x2; x++) {
                 img.setRGB(x, y, rgb);
                 error += dError;
-                if((error<<1) >= dx){
+                if ((error << 1) >= dx) {
                     y += dirY;
                     error -= dx;
                 }
@@ -66,10 +148,10 @@ public class RenderFunctions {
             int error = 0;
             int dError = dx;
             int x = x1;
-            for(int y = y1; y <= y2; y++){
+            for (int y = y1; y <= y2; y++) {
                 img.setRGB(x, y, rgb);
                 error += dError;
-                if(error<<1 >= dy){
+                if (error << 1 >= dy) {
                     x += dirX;
                     error -= dy;
                 }

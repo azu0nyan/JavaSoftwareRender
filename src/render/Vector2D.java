@@ -1,10 +1,10 @@
 package render;
 
 public class Vector2D {
-    private static double rotationDirection = 1;
-    private double x, y = 0;
+    private static float rotationDirection = 1;
+    public float x, y = 0;
 
-    public Vector2D(double x, double y) {
+    public Vector2D(float x, float y) {
         this.x = x;
         this.y = y;
     }
@@ -99,7 +99,7 @@ public class Vector2D {
      * @param d масштаб
      * @return масштабированный вектор
      */
-    public Vector2D scale(double d) {
+    public Vector2D scale(float d) {
         return new Vector2D(x * d, y * d);
     }
 
@@ -110,7 +110,7 @@ public class Vector2D {
      * @param d масштаб
      * @return масштабированный вектор
      */
-    public static Vector2D scale( Vector2D v, double d) {
+    public static Vector2D scale( Vector2D v, float d) {
         return v.scale(d);
     }
 
@@ -135,9 +135,9 @@ public class Vector2D {
      * @param a угол поворота
      * @return вектор повернутый на угол а
      */
-    public Vector2D rotate(double a) {
+    public Vector2D rotate(float a) {
         a *= rotationDirection;
-        return new Vector2D(x * Math.cos(a) + y * Math.sin(a), x * -Math.sin(a) + y * Math.cos(a));
+        return new Vector2D((float)(x * Math.cos(a) + y * Math.sin(a)), (float)(x * -Math.sin(a) + y * Math.cos(a)));
     }
 
     /**
@@ -147,22 +147,22 @@ public class Vector2D {
      * @param v вектор
      * @return вектор повернутый на угол а
      */
-    public static Vector2D rotate( Vector2D v, double a) {
+    public static Vector2D rotate( Vector2D v, float a) {
         return v.rotate(a);
     }
 
     /**
      * @return длинна вектора
      */
-    public double length() {
-        return Math.sqrt(x * x + y * y);
+    public float length() {
+        return (float) Math.sqrt(x * x + y * y);
     }
 
     /**
      * @param v вектор
      * @return длинна вектора
      */
-    public static double length( Vector2D v) {
+    public static float length( Vector2D v) {
         return v.length();
     }
 
@@ -194,7 +194,7 @@ public class Vector2D {
      * @param v множитель
      * @return скалярное произведенние вектора с аргументом функции
      */
-    public double scalarProduct( Vector2D v) {
+    public float scalarProduct( Vector2D v) {
         return x * v.x + y * v.y;
     }
 
@@ -205,7 +205,7 @@ public class Vector2D {
      * @param v2 множитель 2
      * @return скалярное произведение v1 и v2
      */
-    public static double scalarProduct( Vector2D v1,  Vector2D v2) {
+    public static float scalarProduct( Vector2D v1,  Vector2D v2) {
         return v1.scalarProduct(v2);
     }
 
@@ -213,8 +213,8 @@ public class Vector2D {
      * @param v
      * @return ориентированный угол между вектором и аргументом функции от -Пи до Пи
      */
-    public double angle( Vector2D v) {
-        return Math.atan2(v.y, v.x) - Math.atan2(y, x);
+    public float angle( Vector2D v) {
+        return (float) (Math.atan2(v.y, v.x) - Math.atan2(y, x));
     }
 
     /**
@@ -222,49 +222,49 @@ public class Vector2D {
      * @param v2 вектор 2
      * @return ориентированный угол между v1 и v2
      */
-    public static double angle( Vector2D v1,  Vector2D v2) {
+    public static float angle( Vector2D v1,  Vector2D v2) {
         return v1.angle(v2);
     }
 
     /**
      * @return координата x вектора
      */
-    public double getX() {
+    public float getX() {
         return x;
     }
 
     /**
      * @return координата y вектора
      */
-    public double getY() {
+    public float getY() {
         return y;
     }
 
     /**
-     * @return координата x вектора, небезопасно т.к. Double.MAX_VALUE > Integer.MAX_VALUE
+     * @return координата x вектора, небезопасно т.к. float.MAX_VALUE > Integer.MAX_VALUE
      */
     public int getXInt() {
         return (int) x;
     }
 
     /**
-     * @return координата y вектора небезопасно т.к. Double.MAX_VALUE > Integer.MAX_VALUE
+     * @return координата y вектора небезопасно т.к. float.MAX_VALUE > Integer.MAX_VALUE
      */
     public int getYInt() {
         return (int) y;
     }
 
-    protected static double getRotationDirection() {
+    protected static float getRotationDirection() {
         return rotationDirection;
     }
 
-    protected static void setRotationDirection(double rotationDirection) {
+    protected static void setRotationDirection(float rotationDirection) {
         Vector2D.rotationDirection = rotationDirection;
     }
-    public double distance(Vector2D v){
+    public float distance(Vector2D v){
         return distance(this, v);
     }
-    public static double distance(Vector2D v1, Vector2D v2){
+    public static float distance(Vector2D v1, Vector2D v2){
         return v1.sub(v2).length();
     }
 

@@ -2,15 +2,15 @@ package render;
 
 public class Vector3D {
 
-    private double x = 0, y = 0, z = 0;
+    float x = 0, y = 0, z = 0;
 
-    /*public Vector3D(double x, double y) {
+    /*public Vector3D(float x, float y) {
         this.x = x;
         this.y = y;
         z = 0;
     }*/
 
-    public Vector3D(double x, double y, double z) {
+    public Vector3D(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -106,7 +106,7 @@ public class Vector3D {
      * @param d масштаб
      * @return масштабированный вектор
      */
-    public Vector3D scale(double d) {
+    public Vector3D scale(float d) {
         return new Vector3D(x * d, y * d, z * d);
     }
 
@@ -117,7 +117,7 @@ public class Vector3D {
      * @param d масштаб
      * @return масштабированный вектор
      */
-    public static Vector3D scale(Vector3D v, double d) {
+    public static Vector3D scale(Vector3D v, float d) {
         return v.scale(d);
     }
 
@@ -136,7 +136,7 @@ public class Vector3D {
         return v.scale(-1);
     }
 //todo rotate around axis
-//    public Vector3D rotate(double a) {
+//    public Vector3D rotate(float a) {
 //        a *= rotationDirection;
 //        return new Vector3D(x * Math.cos(a) + y * Math.sin(a), x * -Math.sin(a) + y * Math.cos(a));
 //    }
@@ -145,15 +145,15 @@ public class Vector3D {
     /**
      * @return длинна вектора
      */
-    public double length() {
-        return Math.sqrt(x * x + y * y + z * z);
+    public float length() {
+        return (float) Math.sqrt(x * x + y * y + z * z);
     }
 
     /**
      * @param v вектор
      * @return длинна вектора
      */
-    public static double length(Vector3D v) {
+    public static float length(Vector3D v) {
         return v.length();
     }
 
@@ -185,7 +185,7 @@ public class Vector3D {
      * @param v множитель
      * @return скалярное произведенние вектора с аргументом функции
      */
-    public double scalarProduct(Vector3D v) {
+    public float scalarProduct(Vector3D v) {
         return x * v.x + y * v.y + z * v.z;
     }
 
@@ -196,11 +196,11 @@ public class Vector3D {
      * @param v2 множитель 2
      * @return скалярное произведение v1 и v2
      */
-    public static double scalarProduct(Vector3D v1, Vector3D v2) {
+    public static float scalarProduct(Vector3D v1, Vector3D v2) {
         return v1.scalarProduct(v2);
     }
 //todo angle
-//    public double angle( Vector3D v) {
+//    public float angle( Vector3D v) {
 //        return Math.atan2(v.y, v.x) - Math.atan2(y, x);
 //    }
 
@@ -208,30 +208,30 @@ public class Vector3D {
     /**
      * @return координата x вектора
      */
-    public double getX() {
+    public float getX() {
         return x;
     }
 
     /**
      * @return координата y вектора
      */
-    public double getY() {
+    public float getY() {
         return y;
     }
 
-    public double getZ() {
+    public float getZ() {
         return z;
     }
 
     /**
-     * @return координата x вектора, небезопасно т.к. Double.MAX_VALUE > Integer.MAX_VALUE
+     * @return координата x вектора, небезопасно т.к. float.MAX_VALUE > Integer.MAX_VALUE
      */
     public int getXInt() {
         return (int) x;
     }
 
     /**
-     * @return координата y вектора небезопасно т.к. Double.MAX_VALUE > Integer.MAX_VALUE
+     * @return координата y вектора небезопасно т.к. float.MAX_VALUE > Integer.MAX_VALUE
      */
     public int getYInt() {
         return (int) y;
@@ -241,11 +241,11 @@ public class Vector3D {
         return (int) z;
     }
 
-    public double distance(Vector3D v) {
+    public float distance(Vector3D v) {
         return distance(this, v);
     }
 
-    public static double distance(Vector3D v1, Vector3D v2) {
+    public static float distance(Vector3D v1, Vector3D v2) {
         return v1.sub(v2).length();
     }
 
@@ -255,6 +255,9 @@ public class Vector3D {
                 z * o.x - x * o.z,
                 x * o.y - y * o.x
         );
+    }
+    public  static Vector3D crossProduct(Vector3D v1, Vector3D v2){
+        return v1.crossProduct(v2);
     }
     public Vector2D removeZ(){
         return new Vector2D(x, y);
