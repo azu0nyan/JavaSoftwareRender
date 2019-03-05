@@ -1,6 +1,12 @@
 package render;
 
 public class Vector2D {
+
+    static final Vector2D zeroVector = new Vector2D(0,0);
+    static final Vector2D xVector = new Vector2D(1,0);
+    static final Vector2D yVector = new Vector2D(0,1);
+
+
     private static float rotationDirection = 1;
     public float x, y = 0;
 

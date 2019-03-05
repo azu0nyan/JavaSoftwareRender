@@ -4,11 +4,10 @@ public class Vector3D {
 
     float x = 0, y = 0, z = 0;
 
-    /*public Vector3D(float x, float y) {
-        this.x = x;
-        this.y = y;
-        z = 0;
-    }*/
+    static final Vector3D zeroVector = new Vector3D(0,0, 0);
+    static final Vector3D xVector = new Vector3D(1,0, 0);
+    static final Vector3D yVector = new Vector3D(0,1, 0);
+    static final Vector3D zVector = new Vector3D(0,0, 1);
 
     public Vector3D(float x, float y, float z) {
         this.x = x;

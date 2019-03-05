@@ -54,7 +54,7 @@ public class RenderWindow extends JFrame implements KeyListener {
     Render render = new Render();
     {
         render.addModel(Model.readFromObj(
-                "models/garg.obj",
+                "models/uaz.obj",
                 "models/uaz_d.png",
                 "models/uaz_n.png",
                 "models/uaz_s.png"));

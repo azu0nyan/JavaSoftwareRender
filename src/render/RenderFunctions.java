@@ -54,6 +54,24 @@ public class RenderFunctions {
         int minY = Math.max(0, Math.min(a2.getYInt(), Math.min(b2.getYInt(), c2.getYInt())));
         int maxX = Math.min(worldInfo.img.getWidth() - 1, Math.max(a2.getXInt(), Math.max(b2.getXInt(), c2.getXInt())));
         int maxY = Math.min(worldInfo.img.getHeight() - 1, Math.max(a2.getYInt(), Math.max(b2.getYInt(), c2.getYInt())));
+
+        //prepare textureCordsIfNeeded
+        Vector2D at = colorMode == colorModeDiffuse ? m.uvs[m.triangleUVs[id][0]] : Vector2D.zeroVector;
+        Vector2D bt = colorMode == colorModeDiffuse ? m.uvs[m.triangleUVs[id][1]] : Vector2D.zeroVector;
+        Vector2D ct = colorMode == colorModeDiffuse ? m.uvs[m.triangleUVs[id][2]] : Vector2D.zeroVector;
+
+        //calc lightIntensity at points if needed
+        Vector3D an = lightingMode == lightingModeGouraud ? m.normals[m.triangleNormals[id][0]].mull(worldInfo.scale).normalize() : Vector3D.zeroVector;
+        Vector3D bn = lightingMode == lightingModeGouraud ? m.normals[m.triangleNormals[id][1]].mull(worldInfo.scale).normalize() : Vector3D.zeroVector;
+        Vector3D cn = lightingMode == lightingModeGouraud ? m.normals[m.triangleNormals[id][2]].mull(worldInfo.scale).normalize() : Vector3D.zeroVector;
+
+        float aLightIntensity = Vector3D.scalarProduct(an, worldInfo.lightDirection);
+        float bLightIntensity = Vector3D.scalarProduct(bn, worldInfo.lightDirection);
+        float cLightIntensity = Vector3D.scalarProduct(cn, worldInfo.lightDirection);
+
+        //Vector3D pNormal = weighted(an, bn, cn, bar).normalize();
+        //lightIntecicity = Vector3D.scalarProduct(pNormal, worldInfo.lightDirection);
+
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 Vector2D p = new Vector2D(x, y);
@@ -69,31 +87,23 @@ public class RenderFunctions {
                                 break;
                             case colorModeDiffuse:
                                 //texture cords
-                                Vector2D at = m.uvs[m.triangleUVs[id][0]];
-                                Vector2D bt = m.uvs[m.triangleUVs[id][1]];
-                                Vector2D ct = m.uvs[m.triangleUVs[id][2]];
                                 Vector2D uv = weighted(at, bt, ct, bar);
                                 rgb = m.getDiffuseAt(uv);
                                 break;
                         }
-                        float lightIntecicity = 0;
-                        switch (lightingMode){
+                        float lightIntensity = 0;
+                        switch (lightingMode) {
                             case lightingModeFlatShading:
-                                lightIntecicity = Vector3D.scalarProduct(triangleNormal, worldInfo.lightDirection);
+                                lightIntensity = Vector3D.scalarProduct(triangleNormal, worldInfo.lightDirection);
                                 break;
                             case lightingModeNoLighting:
-                                lightIntecicity = 1f;
+                                lightIntensity = 1f;
                                 break;
                             case lightingModeGouraud:
-                                Vector3D an = m.normals[m.triangleNormals[id][0]].mull(worldInfo.scale);
-                                Vector3D bn = m.normals[m.triangleNormals[id][1]].mull(worldInfo.scale);
-                                Vector3D cn = m.normals[m.triangleNormals[id][2]].mull(worldInfo.scale);
-                                Vector3D pNormal = weighted(an, bn, cn, bar).normalize();
-                                lightIntecicity = Vector3D.scalarProduct(pNormal, worldInfo.lightDirection);
-                                //System.out.println(lightIntecicity);
+                                lightIntensity = aLightIntensity * bar.x + bLightIntensity * bar.y + cLightIntensity * bar.z;
                                 break;
                         }
-                        rgb = lightColor(rgb, lightIntecicity);
+                        rgb = lightColor(rgb, lightIntensity);
                         //write color
                         worldInfo.img.setRGB(x, y, rgb);
                         //write zBuffer

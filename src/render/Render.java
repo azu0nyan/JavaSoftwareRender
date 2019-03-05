@@ -22,7 +22,7 @@ public class Render {
     BufferedImage img;
 
     Vector3D offset = new Vector3D(1000, 740, 0);
-    Vector3D scale = new Vector3D(1f, -1f, -1f).scale(2);
+    Vector3D scale = new Vector3D(1f, 1f, 1f).scale(1);
 
     Vector3D lightDirection = new Vector3D(0, 0, 1);
     Vector3D cameraDirection = new Vector3D(0, 0, 1);
@@ -59,7 +59,7 @@ public class Render {
                 break;
             case DIFFUSE:
                 for (int i = 0; i < m.triangles.length; i++) {
-                    renderTriangleOnModel(m, i, colorModeGreyScale, lightingModeFlatShading, this);
+                    renderTriangleOnModel(m, i, colorModeDiffuse, lightingModeGouraud, this);
                 }
                 break;
             case RANDOM_COLORS:
