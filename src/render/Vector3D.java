@@ -2,6 +2,7 @@ package render;
 
 public class Vector3D {
 
+    private static Vector3D infVector = new Vector3D(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
     float x = 0, y = 0, z = 0;
 
     static final Vector3D zeroVector = new Vector3D(0,0, 0);
@@ -260,5 +261,21 @@ public class Vector3D {
     }
     public Vector2D removeZ(){
         return new Vector2D(x, y);
+    }
+
+    public Vector2D from2Homogeneous() {
+        return z!= 0 ?new Vector2D(x / z, y / z): Vector2D.infVector;
+    }
+
+    public float[] toArray() {
+        return new float[]{x, y, z};
+    }
+
+    public static Vector3D from3Homogeneous(float [] v){
+        return v[3]!= 0 ?new Vector3D(v[0] / v[3], v[1] / v[3], v[2] / v[3] ): Vector3D.infVector;
+    }
+
+    public float [] to3Homogeneous(){
+        return new float[]{x, y, z, 1};
     }
 }

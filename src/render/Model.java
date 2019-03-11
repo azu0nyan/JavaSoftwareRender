@@ -34,9 +34,15 @@ public class Model {
     }
 
     static Model readFromObj(String modelFileName, String diffuseTextureFileName, String normalTextureFileName, String specularTextureFileName) {
+        String lastLine = "";
         try {
             System.out.println("Loading:" + modelFileName);
-            Scanner f = new Scanner(new File(modelFileName));
+            File fromFile = new File(modelFileName);
+            long probableLength =  fromFile.length() / 38;
+            int line = 0;
+            System.out.printf("Size: %.1fMb ~%d lines\n", fromFile.length() / (1024.0 * 1024.0), fromFile.length() / 19);
+
+            Scanner f = new Scanner(fromFile);
 
             ArrayList<Vector3D> verts = new ArrayList<>();
             ArrayList<int[]> triangles = new ArrayList<>();
@@ -48,22 +54,31 @@ public class Model {
             boolean missedNormals = false;
             boolean missedUVs = false;
             while (f.hasNextLine()) {
+                if(line % 100_000 == 0){
+                    System.out.printf("Reading line:%10d %.1f\n", line, 100.0 * line / probableLength);
+                }
                 String str = f.nextLine();
+                lastLine = str;//to Logging
+                line++;
+
                 if (str.isBlank() || str.isEmpty()) continue;
+
                 Scanner current = new Scanner(str);
                 String first = current.next();
+
                 if (first.startsWith("#")) continue;
+
                 switch (first) {
                     case "v":
-                        Vector3D vertex = new Vector3D(current.nextFloat(), current.nextFloat(), current.nextFloat());
+                        Vector3D vertex = new Vector3D(Float.parseFloat(current.next()), Float.parseFloat(current.next()), Float.parseFloat(current.next()));
                         verts.add(vertex);
                         break;
                     case "vt"://uv
-                        Vector2D uv = new Vector2D(current.nextFloat(), current.nextFloat());
+                        Vector2D uv = new Vector2D(Float.parseFloat(current.next()), Float.parseFloat(current.next()));
                         uvs.add(uv);
                         break;
                     case "vn"://normals
-                        Vector3D normal = new Vector3D(current.nextFloat(), current.nextFloat(), current.nextFloat());
+                        Vector3D normal = new Vector3D(Float.parseFloat(current.next()), Float.parseFloat(current.next()), Float.parseFloat(current.next()));
                         normals.add(normal);
                         break;
                     case "vp"://param space
@@ -128,7 +143,8 @@ public class Model {
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e ) {
+            System.out.println("Last line: " + lastLine);
             e.printStackTrace();
         }
         return null;

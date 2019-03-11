@@ -2,9 +2,10 @@ package render;
 
 public class Vector2D {
 
-    static final Vector2D zeroVector = new Vector2D(0,0);
-    static final Vector2D xVector = new Vector2D(1,0);
-    static final Vector2D yVector = new Vector2D(0,1);
+    static final Vector2D zeroVector = new Vector2D(0, 0);
+    static final Vector2D xVector = new Vector2D(1, 0);
+    static final Vector2D yVector = new Vector2D(0, 1);
+    public static Vector2D infVector = new Vector2D(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
 
 
     private static float rotationDirection = 1;
@@ -21,7 +22,7 @@ public class Vector2D {
      * @param v слагаемое
      * @return сумма вектора и аргумента
      */
-    public Vector2D add( Vector2D v) {
+    public Vector2D add(Vector2D v) {
         return new Vector2D(x + v.x, y + v.y);
     }
 
@@ -30,7 +31,7 @@ public class Vector2D {
      * @param v2 слагаемое 2
      * @return покоординатная сумма v1  + v2
      */
-    public static Vector2D add( Vector2D v1,  Vector2D v2) {
+    public static Vector2D add(Vector2D v1, Vector2D v2) {
         return v1.add(v2);
     }
 
@@ -40,7 +41,7 @@ public class Vector2D {
      * @param v множитель
      * @return произведение вектора и аргумента
      */
-    public Vector2D mull( Vector2D v) {
+    public Vector2D mull(Vector2D v) {
         return new Vector2D(x * v.x, y * v.y);
     }
 
@@ -49,7 +50,7 @@ public class Vector2D {
      * @param v2 множитель 2
      * @return покоординатное произведение v1 * v2
      */
-    public static Vector2D mull( Vector2D v1,  Vector2D v2) {
+    public static Vector2D mull(Vector2D v1, Vector2D v2) {
         return v1.mull(v2);
     }
 
@@ -59,7 +60,7 @@ public class Vector2D {
      * @param v вычитаемое
      * @return разность вектора и аргумента
      */
-    public Vector2D sub( Vector2D v) {
+    public Vector2D sub(Vector2D v) {
         return new Vector2D(x - v.x, y - v.y);
     }
 
@@ -68,7 +69,7 @@ public class Vector2D {
      * @param v2 ввычитаемое
      * @return покоординатная разность v1 - v2
      */
-    public static Vector2D sub( Vector2D v1,  Vector2D v2) {
+    public static Vector2D sub(Vector2D v1, Vector2D v2) {
         return v1.sub(v2);
     }
 
@@ -78,7 +79,7 @@ public class Vector2D {
      * @param v делитель
      * @return частное вектора и аргумента
      */
-    public Vector2D div( Vector2D v) {
+    public Vector2D div(Vector2D v) {
         return new Vector2D(v.x == 0 ? 0 : x / v.x, v.y == 0 ? 0 : y / v.y);
     }
 
@@ -87,7 +88,7 @@ public class Vector2D {
      * @param v2 делитель
      * @return покоординатное частное v1 / v2
      */
-    public static Vector2D div( Vector2D v1,  Vector2D v2) {
+    public static Vector2D div(Vector2D v1, Vector2D v2) {
         return v1.div(v2);
     }
 
@@ -116,7 +117,7 @@ public class Vector2D {
      * @param d масштаб
      * @return масштабированный вектор
      */
-    public static Vector2D scale( Vector2D v, float d) {
+    public static Vector2D scale(Vector2D v, float d) {
         return v.scale(d);
     }
 
@@ -131,7 +132,7 @@ public class Vector2D {
      * @param v ветор
      * @return вектор направленный в противоположную сторону(развернутый на 180 градусов), такой же длинны
      */
-    public static Vector2D opposite( Vector2D v) {
+    public static Vector2D opposite(Vector2D v) {
         return v.scale(-1);
     }
 
@@ -143,7 +144,7 @@ public class Vector2D {
      */
     public Vector2D rotate(float a) {
         a *= rotationDirection;
-        return new Vector2D((float)(x * Math.cos(a) + y * Math.sin(a)), (float)(x * -Math.sin(a) + y * Math.cos(a)));
+        return new Vector2D((float) (x * Math.cos(a) + y * Math.sin(a)), (float) (x * -Math.sin(a) + y * Math.cos(a)));
     }
 
     /**
@@ -153,7 +154,7 @@ public class Vector2D {
      * @param v вектор
      * @return вектор повернутый на угол а
      */
-    public static Vector2D rotate( Vector2D v, float a) {
+    public static Vector2D rotate(Vector2D v, float a) {
         return v.rotate(a);
     }
 
@@ -168,7 +169,7 @@ public class Vector2D {
      * @param v вектор
      * @return длинна вектора
      */
-    public static float length( Vector2D v) {
+    public static float length(Vector2D v) {
         return v.length();
     }
 
@@ -190,7 +191,7 @@ public class Vector2D {
      * @param v вектор
      * @return вектор длинны 1 смотрящий в том же направлении что и данный
      */
-    public static Vector2D normalize( Vector2D v) {
+    public static Vector2D normalize(Vector2D v) {
         return v.normalize();
     }
 
@@ -200,7 +201,7 @@ public class Vector2D {
      * @param v множитель
      * @return скалярное произведенние вектора с аргументом функции
      */
-    public float scalarProduct( Vector2D v) {
+    public float scalarProduct(Vector2D v) {
         return x * v.x + y * v.y;
     }
 
@@ -211,7 +212,7 @@ public class Vector2D {
      * @param v2 множитель 2
      * @return скалярное произведение v1 и v2
      */
-    public static float scalarProduct( Vector2D v1,  Vector2D v2) {
+    public static float scalarProduct(Vector2D v1, Vector2D v2) {
         return v1.scalarProduct(v2);
     }
 
@@ -219,7 +220,7 @@ public class Vector2D {
      * @param v
      * @return ориентированный угол между вектором и аргументом функции от -Пи до Пи
      */
-    public float angle( Vector2D v) {
+    public float angle(Vector2D v) {
         return (float) (Math.atan2(v.y, v.x) - Math.atan2(y, x));
     }
 
@@ -228,7 +229,7 @@ public class Vector2D {
      * @param v2 вектор 2
      * @return ориентированный угол между v1 и v2
      */
-    public static float angle( Vector2D v1,  Vector2D v2) {
+    public static float angle(Vector2D v1, Vector2D v2) {
         return v1.angle(v2);
     }
 
@@ -267,13 +268,21 @@ public class Vector2D {
     protected static void setRotationDirection(float rotationDirection) {
         Vector2D.rotationDirection = rotationDirection;
     }
-    public float distance(Vector2D v){
+
+    public float distance(Vector2D v) {
         return distance(this, v);
     }
-    public static float distance(Vector2D v1, Vector2D v2){
+
+    public static float distance(Vector2D v1, Vector2D v2) {
         return v1.sub(v2).length();
     }
 
 
+    public Vector3D toHomogeneous() {
+        return new Vector3D(x, y, 1);
+    }
 
+    public float[] toArray() {
+        return new float[]{x, y};
+    }
 }

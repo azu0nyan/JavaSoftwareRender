@@ -32,9 +32,14 @@ public class RenderFunctions {
         Vector3D b = m.verts[m.triangles[id][1]];
         Vector3D c = m.verts[m.triangles[id][2]];
 
-        a = transform(a, worldInfo.offset, worldInfo.scale);
+       /* a = transform(a, worldInfo.offset, worldInfo.scale);
         b = transform(b, worldInfo.offset, worldInfo.scale);
         c = transform(c, worldInfo.offset, worldInfo.scale);
+        */
+       a = transform( worldInfo.transformMatrix, a);
+       b = transform( worldInfo.transformMatrix, b);
+       c = transform( worldInfo.transformMatrix, c);
+
 
         //backFace culling
         Vector3D ab = b.sub(a);
@@ -48,6 +53,7 @@ public class RenderFunctions {
         Vector2D a2 = a.removeZ();
         Vector2D b2 = b.removeZ();
         Vector2D c2 = c.removeZ();
+
 
         //clamp probable triangle area
         int minX = Math.max(0, Math.min(a2.getXInt(), Math.min(b2.getXInt(), c2.getXInt())));
@@ -77,8 +83,10 @@ public class RenderFunctions {
                 Vector2D p = new Vector2D(x, y);
                 Vector3D bar = toBarycentric(a2, b2, c2, p);
                 if (bar.x >= 0 && bar.y >= 0 && bar.z >= 0) {
-                    Vector3D placeIn3D = weighted(a, b, c, bar);
-                    if (placeIn3D.z < worldInfo.zBuffer[worldInfo.toZbIndex(x, y)]) {
+                   // Vector3D placeIn3D = weighted(a, b, c, bar);
+                    Vector3D placeIn3D = a.add(Vector3D.add(ab.scale(bar.y), ac.scale(bar.z)));
+                   // System.out.println(placeIn3D.z);
+                    if (placeIn3D.z > worldInfo.zBuffer[worldInfo.toZbIndex(x, y)]) {
                         //get diffuse Color
                         int rgb = worldInfo.defaultColor;
                         switch (colorMode) {

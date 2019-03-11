@@ -88,7 +88,7 @@ public class RenderWindow extends JFrame implements KeyListener {
             case KeyEvent.VK_X:
                 render.scale = render.scale.scale(0.9f);
                 break;
-            case KeyEvent.VK_R:
+         /*   case KeyEvent.VK_R:
                 render.scale = render.scale.mull(new Vector3D(-1, 1, 1));
                 break;
             case KeyEvent.VK_F:
@@ -96,7 +96,7 @@ public class RenderWindow extends JFrame implements KeyListener {
                 break;
             case KeyEvent.VK_V:
                 render.scale = render.scale.mull(new Vector3D(1, 1, -1));
-                break;
+                break;*/
 
 
             case KeyEvent.VK_Q:
@@ -116,6 +116,39 @@ public class RenderWindow extends JFrame implements KeyListener {
                 break;
             case KeyEvent.VK_D:
                 render.offset = render.offset.add(new Vector3D(-50, 0, 0));
+                break;
+
+            case KeyEvent.VK_R:
+                render.rotate = render.rotate.add(new Vector3D((float)(Math.PI / 32), 0, 0));
+                break;
+            case KeyEvent.VK_F:
+                render.rotate = render.rotate.add(new Vector3D(-(float)(Math.PI / 32), 0, 0));
+                break;
+            case KeyEvent.VK_T:
+                render.rotate = render.rotate.add(new Vector3D(0, (float)(Math.PI / 32), 0));
+                break;
+            case KeyEvent.VK_G:
+                render.rotate = render.rotate.add(new Vector3D(0, -(float)(Math.PI / 32), 0));
+                break;
+            case KeyEvent.VK_Y:
+                render.rotate = render.rotate.add(new Vector3D(0, 0, -(float)(Math.PI / 32)));
+                break;
+            case KeyEvent.VK_H:
+                render.rotate = render.rotate.add(new Vector3D(0, 0, (float)(Math.PI / 32)));
+                break;
+
+            case KeyEvent.VK_3:
+                render.scale = render.scale.scale(0.9f);
+                break;
+            case KeyEvent.VK_4:
+                render.scale = render.scale.scale(1.1f);
+                break;
+            //camera distance
+            case KeyEvent.VK_1:
+                render.cameraPosition *= 0.9f;
+                break;
+            case KeyEvent.VK_2:
+                render.cameraPosition *= 1.1f;
                 break;
         }
     }

@@ -15,8 +15,8 @@ public class MathUtils {
         return res;
     }*/
 
-    static Vector3D transform(Vector3D v, Vector3D offset, Vector3D scale) {
-        return v.mull(scale).add(offset);
+    static Vector3D transform(float [][] mHomo, Vector3D noHomo) {
+        return Vector3D.from3Homogeneous(Matrix.mull(mHomo, noHomo.to3Homogeneous()));
     }
 
     static Vector3D toBarycentric(Vector2D a, Vector2D b, Vector2D c, Vector2D p) {
